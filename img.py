@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use("TkAgg")
 from scipy import misc 
 from scipy.ndimage.morphology import binary_closing, binary_fill_holes
 from skimage.measure import label, regionprops
@@ -8,10 +10,14 @@ import pandas as pd
 import math
 import os
 import sys
+import Tkinter as tk
+from Tkinter import *
+import Tkinter, Tkconstants, tkFileDialog
+
 
 class PatternIntensity(object):
-	DIAMETER = 400
 	MICRO_TO_PIXEL = 1.6098
+	diameter = 400
 
 	df_mold = None
 	curr_df = None
@@ -22,12 +28,13 @@ class PatternIntensity(object):
 	channel = None
 
 	def __init__(self, image_dir):
-		self.img_dir = image_dir
+		self.get_input_information()
 		self.get_things_ready()
 		self.calculate_intensity()
 
 	def calculate_intensity(self):
 		for image_path, image_name in self.images:
+			print "Processing image: " + image_name
 			self.curr_image, self.channel = image_name.split('.')[0].split('_')
 			same_group = False
 			if self.df_mold is None:
@@ -44,12 +51,12 @@ class PatternIntensity(object):
 		self.save_data()
 
 	def get_things_ready(self):
-		self.offset = int(self.DIAMETER/2*self.MICRO_TO_PIXEL)
+		self.offset = int(self.diameter/2*self.MICRO_TO_PIXEL)
 		self.create_data_dir()
 		self.images = self.get_all_images()
 
 	def create_data_dir(self):
-		path = self.img_dir + '/data'
+		path = self.image_dir + '/data'
 		if not os.path.exists(path):
 			try:
 				os.makedirs(path)
@@ -61,7 +68,7 @@ class PatternIntensity(object):
 		return self.data_dir
 
 	def get_all_images(self):
-		for root, directories, files in os.walk(self.img_dir):
+		for root, directories, files in os.walk(self.image_dir):
 			for filename in files:
 				if filename.endswith(('.JPG', '.jpg', '.TIF', '.tif')):
 					filepath = os.path.join(root, filename)
@@ -130,7 +137,7 @@ class PatternIntensity(object):
 
 	def create_df_mold(self):
 		if not self.df_mold:
-			pixels = int(self.DIAMETER * self.MICRO_TO_PIXEL)
+			pixels = int(self.diameter * self.MICRO_TO_PIXEL)
 			center = pixels/2
 			distances = {}
 			for row in xrange(pixels):
@@ -148,10 +155,50 @@ class PatternIntensity(object):
 		plt.imshow(image)
 		plt.show()
 
+	def get_input_information(self):
+		root = tk.Tk()
+		root.title("Please specify image directory and pattern diameter")
+		root.geometry("600x100")
+		frame = tk.Frame(root)
+		frame.pack()
+
+		dir_label = tk.Label(frame, text="Image Directory: ")
+		dir_label.grid(row=0, column=1, sticky=W)
+		diameter_label = tk.Label(frame, text="Pattern Diameter (um): ")
+		diameter_label.grid(row=1, column=1, sticky=W)
+	
+		dir_var = tk.StringVar()
+		self.dir_entry = tk.Entry(frame, textvariable=dir_var)
+		self.dir_entry.config(width=40)
+		self.dir_entry.grid(row=0, column=2)
+
+		diameter_var = tk.IntVar()
+		diameter_var.set(400)
+		self.diameter_entry = tk.Entry(frame, textvariable=diameter_var)
+		self.diameter_entry.config(justify='left')
+		self.diameter_entry.grid(row=1, column=2, sticky=W)
+
+		dir_btn = tk.Button(frame, text = 'Open', command = self.fetch_entry)
+		dir_btn.config(background='blue')
+		dir_btn.grid(row = 0, column = 3)
+
+		submit_btn = tk.Button(frame, text = 'Submit', command = root.destroy)
+		submit_btn.grid(row = 3, column=3)
+
+		root.mainloop()
+
+		self.image_dir = dir_var.get() 
+		self.diameter = int(diameter_var.get())
+
+	def fetch_entry(self):
+		self.dir_entry.delete(0)
+		self.dir_entry.insert(0, tkFileDialog.askdirectory())
+
 if __name__ == '__main__':
 	try:
-		img_dir = sys.args[1]
+		image_dir = sys.args[1]
 	except Exception:
-		img_dir = os.getcwd()
-	t = PatternIntensity(img_dir)
+		image_dir = os.getcwd()
+	t = PatternIntensity(image_dir)
+
 
