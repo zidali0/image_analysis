@@ -19,7 +19,7 @@ class ImageBase(object):
 	MICRO_TO_PIXEL = 1.6098
 	diameter = 400
 
-	data_dir = None
+	output_data_dir = None
 	dir_name = None
 	images = None
 
@@ -29,10 +29,10 @@ class ImageBase(object):
 
 	def get_things_ready(self):
 		self.offset = int(self.diameter/2*self.MICRO_TO_PIXEL)
-		self.create_data_dir()
+		self.create_output_data_dir()
 		self.images = self.get_all_images()
 
-	def create_data_dir(self):
+	def create_output_data_dir(self):
 		path = self.image_dir + '/' + self.dir_name
 		if not os.path.exists(path):
 			try:
@@ -41,8 +41,8 @@ class ImageBase(object):
 				if not os.path.isdir(path):
 					print "failed to create data directory"
 		else:
-			self.data_dir = path
-		return self.data_dir
+			self.output_data_dir = path
+		return self.output_data_dir
 
 	def get_all_images(self):
 		for root, directories, files in os.walk(self.image_dir):
@@ -90,7 +90,7 @@ class ImageBase(object):
 
 	def get_input_information(self):
 		root = tk.Tk()
-		root.title("Please specify image directory and pattern diameter")
+		root.title("Please specify image/data directory and pattern diameter")
 		root.geometry("600x100")
 		frame = tk.Frame(root)
 		frame.pack()

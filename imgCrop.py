@@ -29,7 +29,7 @@ class ImageCrop(ImageBase):
 
 	def save_image(self, image, image_name):
 		print image_name
-		misc.imsave(self.data_dir+'/' + image_name, image)
+		misc.imsave(self.output_data_dir+'/' + image_name, image)
 
 if __name__ == '__main__':
 	t = ImageCrop()

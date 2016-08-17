@@ -55,7 +55,7 @@ class PatternIntensity(ImageBase):
 		file_name = self.pre_image + '.csv'
 		self.curr_df = self.curr_df.div(self.curr_df['count'], axis=0)
 		self.curr_df.drop('count', axis=1, inplace=True)
-		self.curr_df.to_csv(self.data_dir + '/' + file_name)
+		self.curr_df.to_csv(self.output_data_dir + '/' + file_name)
 
 	def get_new_df(self):
 		self.curr_df = self.df_mold.copy(deep=True)
