@@ -35,7 +35,7 @@ class PatternIntensity(ImageBase):
 
 	def go_intensity(self, image_path, same_group):
 		if same_group:
-			grey_img = self.get_grey_images(image_path)
+			grey_img = self.get_gray_images(image_path)
 		else:
 			raw_img, grey_img, closed_img = self.get_images(image_path)
 			self.get_pattern_centroid(closed_img)

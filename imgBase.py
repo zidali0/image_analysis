@@ -17,6 +17,7 @@ import Tkinter, Tkconstants, tkFileDialog
 class ImageBase(object):
 
 	MICRO_TO_PIXEL = 1.6098
+	MICRO_TO_PIXEL = 1.6098*2
 	diameter = 400
 
 	output_data_dir = None
@@ -40,8 +41,7 @@ class ImageBase(object):
 			except OSError:
 				if not os.path.isdir(path):
 					print "failed to create data directory"
-		else:
-			self.output_data_dir = path
+		self.output_data_dir = path
 		return self.output_data_dir
 
 	def get_all_images(self):
@@ -101,7 +101,6 @@ class ImageBase(object):
 		diameter_label.grid(row=1, column=1, sticky=W)
 	
 		dir_var = tk.StringVar()
-		dir_var.set(os.getcwd())
 		self.dir_entry = tk.Entry(frame, textvariable=dir_var)
 		self.dir_entry.config(width=40)
 		self.dir_entry.grid(row=0, column=2)
@@ -126,4 +125,4 @@ class ImageBase(object):
 
 	def fetch_entry(self):
 		self.dir_entry.delete(0)
-		self.dir_entry.insert(0, tkFileDialog.askdirectory(initialdir=os.getcwd()))
+		self.dir_entry.insert(0, tkFileDialog.askdirectory(initial=os.getcwd()))

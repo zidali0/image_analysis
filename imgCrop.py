@@ -22,14 +22,13 @@ class ImageCrop(ImageBase):
 			if not self.pre_image or self.pre_image != self.curr_image:
 				self.get_pattern_centroid(closed_image)
 				self.get_pattern_border(closed_image)
-			print raw_image.shape, self.top, self.bottom, self.left, self.right
 			cropped_image = self.get_cropped_image(raw_image)
 			self.save_image(cropped_image, image_name)
 			self.pre_image = self.curr_image
 
 	def save_image(self, image, image_name):
 		print image_name
-		misc.imsave(self.output_data_dir+'/' + image_name, image)
+		misc.imsave(self.output_data_dir +'/' + image_name, image)
 
 if __name__ == '__main__':
 	t = ImageCrop()
