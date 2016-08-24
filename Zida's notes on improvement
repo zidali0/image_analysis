@@ -1,0 +1,3 @@
+1. imgCrop: make sure that all the images have the same shape. 
+2. imgData: Based on this fixed shape, initiate an array with all the distance information. Obviously, the power computation
+are simply repeating itself for different images. In fact, we can even deduce a formula which can immediately get 
